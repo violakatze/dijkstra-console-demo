@@ -11,7 +11,6 @@ public class Node(string name)
     public string Name { get; } = name;
 
     /// <summary>
-    /// 
     /// このノードのコスト
     /// </summary>
     public int Cost { get; private set; } = int.MaxValue;
