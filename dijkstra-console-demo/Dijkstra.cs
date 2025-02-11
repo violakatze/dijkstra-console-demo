@@ -3,20 +3,45 @@
 /// <summary>
 /// ダイクストラ(オーソドックスなアルゴリズム)
 /// </summary>
-/// <param name="nodes">ノード(配列の最初がスタート, 最後がゴールになる)</param>
-/// <param name="edges">エッジ</param>
-public class Dijkstra(IEnumerable<Node> nodes, IEnumerable<Edge> edges)
+public class Dijkstra
 {
     /// <summary>
     /// 全ノード
     /// </summary>
-    public IEnumerable<Node> Nodes { get; } = nodes;
+    public IEnumerable<Node> Nodes { get; }
 
     /// <summary>
     /// 全エッジ
     /// </summary>
-    public IEnumerable<Edge> Edges { get; } = edges;
+    public IEnumerable<Edge> Edges { get; }
 
+    /// <summary>
+    /// ダイクストラ(オーソドックスなアルゴリズム)
+    /// </summary>
+    /// <param name="nodes">ノード(配列の最初がスタート, 最後がゴールになる)</param>
+    /// <param name="edges">エッジ</param>
+    public Dijkstra(IEnumerable<Node> nodes, IEnumerable<Edge> edges)
+    {
+        if (!nodes.Any())
+        {
+            throw new ArgumentException("ノードがありません");
+        }
+
+        // 循環(同一経路に複数エッジ)チェック
+        foreach (var edge in edges)
+        {
+            var node1 = edge.Nodes.ElementAt(0);
+            var node2 = edge.Nodes.ElementAt(1);
+            var others = edges.Except([edge]).ToArray();
+            if (others.Any(x => x.Nodes.Any(n => n == node1) && x.Nodes.Any(n => n == node2)))
+            {
+                throw new ArgumentException($"同じ経路のエッジが複数あります:{node1.Name}-{node2.Name}");
+            }
+        }
+
+        Nodes = nodes;
+        Edges = edges;
+    }
     /// <summary>
     /// 計算実行
     /// </summary>

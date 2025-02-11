@@ -8,6 +8,20 @@ namespace dijkstra_console_demo;
 public class DijkstraTest
 {
     [Fact]
+    public void 初期状態()
+    {
+        var nodeA = new Node("a");
+        var nodeB = new Node("b");
+        var nodes = new[] { nodeA, nodeB };
+        var edges = new[] { new Edge(nodeA, nodeB, 1), };
+
+        var dijkstra = new Dijkstra(nodes, edges);
+
+        Assert.Equal(nodes, dijkstra.Nodes);
+        Assert.Equal(edges, dijkstra.Edges);
+    }
+
+    [Fact]
     public void 通常1()
     {
         var nodeA = new Node("a");
@@ -67,38 +81,82 @@ public class DijkstraTest
     }
 
     [Fact]
+    public void 通常3()
+    {
+        var nodeA = new Node("a");
+        var nodeB = new Node("b");
+        var nodes = new[] { nodeA, nodeB };
+        var edges = new[] { new Edge(nodeA, nodeB, 1), };
+
+        var dijkstra = new Dijkstra(nodes, edges);
+        var result = dijkstra.Solve();
+
+        Assert.Equal(1, result.TotalCost);
+        Assert.Equal("a-b", result.Route);
+    }
+
+    [Fact]
     public void エッジに紐づかないノードあり()
     {
-        // TODO:
+        var nodeA = new Node("a");
+        var nodeB = new Node("b");
+        var nodeC = new Node("c");
+        var nodes = new[] { nodeA, nodeB };
+        var edges = new[] { new Edge(nodeA, nodeB, 1), };
+
+        var dijkstra = new Dijkstra(nodes, edges);
+        var result = dijkstra.Solve();
+
+        Assert.Equal(1, result.TotalCost);
+        Assert.Equal("a-b", result.Route);
+        Assert.Equal("c", nodeC.Name);
     }
 
     [Fact]
     public void ノード無し()
     {
-        // TODO:
+        var nodes = Enumerable.Empty<Node>();
+        var edges = Enumerable.Empty<Edge>();
+
+        var exception = Assert.Throws<ArgumentException>(() => _ = new Dijkstra(nodes, edges));
+        Assert.Equal("ノードがありません", exception.Message);
     }
 
     [Fact]
     public void エッジ無し()
     {
-        // TODO:
+        var nodeA = new Node("a");
+        var nodes = new[] { nodeA };
+        var edges = Enumerable.Empty<Edge>();
+
+        var dijkstra = new Dijkstra(nodes, edges);
+        var result = dijkstra.Solve();
+
+        Assert.Equal(0, result.TotalCost);
+        Assert.Equal("a", result.Route);
     }
 
     [Fact]
-    public void エッジの両端が同じノード()
+    public void エッジ循環1()
     {
-        // TODO:
+        var nodeA = new Node("a");
+        var nodeB = new Node("b");
+        var edge1 = new Edge(nodeA, nodeB, 1);
+        var edge2 = new Edge(nodeA, nodeB, 2);
+
+        var exception = Assert.Throws<ArgumentException>(() => _ = new Dijkstra([nodeA, nodeB], [edge1, edge2]));
+        Assert.Equal("同じ経路のエッジが複数あります:a-b", exception.Message);
     }
 
     [Fact]
-    public void エッジ循環()
+    public void エッジ循環2()
     {
-        // TODO:
-    }
+        var nodeA = new Node("a");
+        var nodeB = new Node("b");
+        var edge1 = new Edge(nodeB, nodeA, 1);
+        var edge2 = new Edge(nodeA, nodeB, 2);
 
-    [Fact]
-    public void エッジコストがマイナス()
-    {
-        // TODO:
+        var exception = Assert.Throws<ArgumentException>(() => _ = new Dijkstra([nodeA, nodeB], [edge1, edge2]));
+        Assert.Equal("同じ経路のエッジが複数あります:b-a", exception.Message);
     }
 }
