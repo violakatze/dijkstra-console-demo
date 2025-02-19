@@ -13,7 +13,7 @@ public class NodeTest
         Assert.Equal("a", nodeA.Name);
         Assert.Equal(int.MaxValue, nodeA.Cost);
         Assert.Equal(int.MaxValue, nodeA.TotalCost);
-        Assert.Empty(nodeA.Routes);
+        Assert.Null(nodeA.Previous);
         Assert.False(nodeA.Fixed);
     }
 
@@ -25,7 +25,7 @@ public class NodeTest
         Assert.Empty(nodeA.Name);
         Assert.Equal(int.MaxValue, nodeA.Cost);
         Assert.Equal(int.MaxValue, nodeA.TotalCost);
-        Assert.Empty(nodeA.Routes);
+        Assert.Null(nodeA.Previous);
         Assert.False(nodeA.Fixed);
     }
 
@@ -38,7 +38,7 @@ public class NodeTest
         Assert.Equal("a", nodeA.Name);
         Assert.Equal(0, nodeA.Cost);
         Assert.Equal(0, nodeA.TotalCost);
-        Assert.Equal([nodeA], nodeA.Routes);
+        Assert.Null(nodeA.Previous);
         Assert.False(nodeA.Fixed);
     }
 
@@ -59,12 +59,12 @@ public class NodeTest
 
         nodeA.SetStartNode();
         nodeA.Fix();
-        nodeB.Update(nodeA.Routes, 1);
+        nodeB.Update(nodeA, 1);
 
         Assert.Equal("b", nodeB.Name);
         Assert.Equal(1, nodeB.Cost);
         Assert.Equal(1, nodeB.TotalCost);
-        Assert.Equal([nodeA, nodeB], nodeB.Routes);
+        Assert.Equal(nodeA, nodeB.Previous);
         Assert.False(nodeB.Fixed);
     }
 
@@ -77,14 +77,14 @@ public class NodeTest
 
         nodeA.SetStartNode();
         nodeA.Fix();
-        nodeB.Update(nodeA.Routes, 1);
+        nodeB.Update(nodeA, 1);
         nodeB.Fix();
-        nodeC.Update(nodeB.Routes, 2);
+        nodeC.Update(nodeB, 2);
 
         Assert.Equal("c", nodeC.Name);
         Assert.Equal(2, nodeC.Cost);
         Assert.Equal(3, nodeC.TotalCost);
-        Assert.Equal([nodeA, nodeB, nodeC], nodeC.Routes);
+        Assert.Equal(nodeB, nodeC.Previous);
         Assert.False(nodeC.Fixed);
     }
 
@@ -97,15 +97,15 @@ public class NodeTest
 
         nodeA.SetStartNode();
         nodeA.Fix();
-        nodeB.Update(nodeA.Routes, 1);
-        nodeC.Update(nodeA.Routes, 3);
+        nodeB.Update(nodeA, 1);
+        nodeC.Update(nodeA, 3);
         nodeB.Fix();
-        nodeC.Update(nodeB.Routes, 1);
+        nodeC.Update(nodeB, 1);
 
         Assert.Equal("c", nodeC.Name);
         Assert.Equal(1, nodeC.Cost);
         Assert.Equal(2, nodeC.TotalCost);
-        Assert.Equal([nodeA, nodeB, nodeC], nodeC.Routes);
+        Assert.Equal(nodeB, nodeC.Previous);
         Assert.False(nodeC.Fixed);
     }
 
@@ -118,15 +118,15 @@ public class NodeTest
 
         nodeA.SetStartNode();
         nodeA.Fix();
-        nodeB.Update(nodeA.Routes, 1);
-        nodeC.Update(nodeA.Routes, 3);
+        nodeB.Update(nodeA, 1);
+        nodeC.Update(nodeA, 3);
         nodeB.Fix();
-        nodeC.Update(nodeB.Routes, 3);
+        nodeC.Update(nodeB, 3);
 
         Assert.Equal("c", nodeC.Name);
         Assert.Equal(3, nodeC.Cost);
         Assert.Equal(3, nodeC.TotalCost);
-        Assert.Equal([nodeA, nodeC], nodeC.Routes);
+        Assert.Equal(nodeA, nodeC.Previous);
         Assert.False(nodeC.Fixed);
     }
 
@@ -139,15 +139,15 @@ public class NodeTest
 
         nodeA.SetStartNode();
         nodeA.Fix();
-        nodeB.Update(nodeA.Routes, 1);
-        nodeC.Update(nodeA.Routes, 3);
+        nodeB.Update(nodeA, 1);
+        nodeC.Update(nodeA, 3);
         nodeB.Fix();
-        nodeC.Update(nodeB.Routes, 2);
+        nodeC.Update(nodeB, 2);
 
         Assert.Equal("c", nodeC.Name);
         Assert.Equal(3, nodeC.Cost);
         Assert.Equal(3, nodeC.TotalCost);
-        Assert.Equal([nodeA, nodeC], nodeC.Routes);
+        Assert.Equal(nodeA, nodeC.Previous);
         Assert.False(nodeC.Fixed);
     }
 }

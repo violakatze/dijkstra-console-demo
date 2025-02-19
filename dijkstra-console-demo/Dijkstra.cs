@@ -71,28 +71,45 @@ public class Dijkstra
                 if (edge.Nodes.FirstOrDefault(n => n.Fixed) is { } previous && edge.Nodes.FirstOrDefault(n => !n.Fixed) is { } next)
                 {
                     // 確定と未確定があったら未確定側を更新
-                    next.Update(previous.Routes, edge.Cost);
+                    next.Update(previous, edge.Cost);
                 }
             }
         }
 
-        return new DijkstraResult(goal.Routes);
+        return new DijkstraResult(goal);
     }
 }
 
 /// <summary>
 /// ダイクストラ計算結果
 /// </summary>
-/// <param name="routes">ゴールノードまでの経路</param>
-public class DijkstraResult(IEnumerable<Node> routes)
+/// <param name="routes">ゴールノード</param>
+public class DijkstraResult(Node goal)
 {
     /// <summary>
     /// 合計コスト
     /// </summary>
-    public int TotalCost => routes.LastOrDefault()?.TotalCost ?? 0;
+    public int TotalCost => goal.TotalCost;
 
     /// <summary>
     /// 最短経路
     /// </summary>
-    public string Route => string.Join("-", routes.Select(x => x.Name));
+    public string Route => RecursiveGenerateRoute(goal);
+
+    /// <summary>
+    /// 最短経路文字列作成
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
+    private static string RecursiveGenerateRoute(Node node)
+    {
+        if (node.Previous == default)
+        {
+            return node.Name;
+        }
+        else
+        {
+            return $"{RecursiveGenerateRoute(node.Previous)}-{node.Name}";
+        }
+    }
 }

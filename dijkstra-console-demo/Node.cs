@@ -16,9 +16,9 @@ public class Node(string name)
     public int Cost { get; private set; } = int.MaxValue;
 
     /// <summary>
-    /// このノードまでの経路
+    /// 直前のノード
     /// </summary>
-    public Node[] Routes { get; private set; } = [];
+    public Node? Previous { get; private set; } = default;
 
     /// <summary>
     /// このノードまでのコスト(合計コスト)
@@ -37,7 +37,7 @@ public class Node(string name)
     {
         Cost = 0;
         TotalCost = 0;
-        Routes = [this];
+        Previous = default;
     }
 
     /// <summary>
@@ -51,11 +51,11 @@ public class Node(string name)
     /// <summary>
     /// 更新
     /// </summary>
-    /// <param name="preivousRoutes">ここまでの経路</param>
+    /// <param name="preivousRoutes">直前のノード</param>
     /// <param name="edge">通ったエッジのコスト</param>
-    public void Update(IEnumerable<Node> preivousRoutes, int edgeCost)
+    public void Update(Node preivous, int edgeCost)
     {
-        var newTotalCost = edgeCost + preivousRoutes.LastOrDefault()?.TotalCost ?? 0;
+        var newTotalCost = edgeCost + preivous.TotalCost;
 
         if (newTotalCost < TotalCost)
         {
@@ -63,9 +63,8 @@ public class Node(string name)
             Cost = edgeCost;
             TotalCost = newTotalCost;
 
-            // ここまでの経路更新
-            var list = new List<Node>(preivousRoutes) { this };
-            Routes = [.. list];
+            // 直前のノード更新
+            Previous = preivous;
         }
     }
 }
