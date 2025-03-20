@@ -11,6 +11,16 @@ public class Dijkstra
     public IEnumerable<Node> Nodes { get; }
 
     /// <summary>
+    /// 開始ノード
+    /// </summary>
+    public IEnumerable<Node> StartNodes { get; }
+
+    /// <summary>
+    /// 終了ノード
+    /// </summary>
+    public IEnumerable<Node> EndNodes { get; }
+
+    /// <summary>
     /// 全エッジ
     /// </summary>
     public IEnumerable<Edge> Edges { get; }
@@ -20,11 +30,33 @@ public class Dijkstra
     /// </summary>
     /// <param name="nodes">ノード(配列の最初がスタート, 最後がゴールになる)</param>
     /// <param name="edges">エッジ</param>
-    public Dijkstra(IEnumerable<Node> nodes, IEnumerable<Edge> edges)
+    public Dijkstra(IEnumerable<Node> nodes, IEnumerable<Node> startNodes, IEnumerable<Node> endNodes, IEnumerable<Edge> edges)
     {
         if (!nodes.Any())
         {
             throw new ArgumentException("ノードがありません");
+        }
+
+        if (!startNodes.Any())
+        {
+            throw new ArgumentException("開始ノードがありません");
+        }
+
+        if (!endNodes.Any())
+        {
+            throw new ArgumentException("終了ノードがありません");
+        }
+
+        // 開始ノードがノードに含まれているかチェック
+        if (startNodes.Any(n => !nodes.Contains(n)))
+        {
+            throw new ArgumentException("開始ノードがノードに含まれていません");
+        }
+
+        // 終了ノードがノードに含まれているかチェック
+        if (endNodes.Any(n => !nodes.Contains(n)))
+        {
+            throw new ArgumentException("終了ノードがノードに含まれていません");
         }
 
         // 循環(同一経路に複数エッジ)チェック
@@ -40,6 +72,8 @@ public class Dijkstra
         }
 
         Nodes = nodes;
+        StartNodes = startNodes;
+        EndNodes = endNodes;
         Edges = edges;
     }
     /// <summary>
@@ -47,18 +81,24 @@ public class Dijkstra
     /// </summary>
     public DijkstraResult Solve()
     {
-        var start = Nodes.First();
-        var goal = Nodes.Last();
-
-        start.SetStartNode();
+        foreach (var start in StartNodes)
+        {
+            start.SetStartNode();
+        }
 
         while (true)
         {
-            // 未確定が無ければ終わり
+            // 終了ノードのいずれかが確定していたら終了
+            if (EndNodes.FirstOrDefault(n => n.Fixed) is { } goal)
+            {
+                return new DijkstraResult(goal);
+            }
+
+            // 未確定が無ければエラー(以上系)
             var notFixeds = Nodes.Where(n => !n.Fixed).ToArray();
             if (notFixeds.Length == 0)
             {
-                break;
+                throw new InvalidOperationException("未確定のノードがありません");
             }
 
             // 合計コスト最小のノードを確定する
@@ -75,8 +115,6 @@ public class Dijkstra
                 }
             }
         }
-
-        return new DijkstraResult(goal);
     }
 }
 

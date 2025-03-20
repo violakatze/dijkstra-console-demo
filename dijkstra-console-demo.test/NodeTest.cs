@@ -11,7 +11,6 @@ public class NodeTest
         var nodeA = new Node("a");
 
         Assert.Equal("a", nodeA.Name);
-        Assert.Equal(int.MaxValue, nodeA.Cost);
         Assert.Equal(int.MaxValue, nodeA.TotalCost);
         Assert.Null(nodeA.Previous);
         Assert.False(nodeA.Fixed);
@@ -23,7 +22,6 @@ public class NodeTest
         var nodeA = new Node("");
 
         Assert.Empty(nodeA.Name);
-        Assert.Equal(int.MaxValue, nodeA.Cost);
         Assert.Equal(int.MaxValue, nodeA.TotalCost);
         Assert.Null(nodeA.Previous);
         Assert.False(nodeA.Fixed);
@@ -36,7 +34,6 @@ public class NodeTest
         nodeA.SetStartNode();
 
         Assert.Equal("a", nodeA.Name);
-        Assert.Equal(0, nodeA.Cost);
         Assert.Equal(0, nodeA.TotalCost);
         Assert.Null(nodeA.Previous);
         Assert.False(nodeA.Fixed);
@@ -62,7 +59,6 @@ public class NodeTest
         nodeB.Update(nodeA, 1);
 
         Assert.Equal("b", nodeB.Name);
-        Assert.Equal(1, nodeB.Cost);
         Assert.Equal(1, nodeB.TotalCost);
         Assert.Equal(nodeA, nodeB.Previous);
         Assert.False(nodeB.Fixed);
@@ -82,7 +78,6 @@ public class NodeTest
         nodeC.Update(nodeB, 2);
 
         Assert.Equal("c", nodeC.Name);
-        Assert.Equal(2, nodeC.Cost);
         Assert.Equal(3, nodeC.TotalCost);
         Assert.Equal(nodeB, nodeC.Previous);
         Assert.False(nodeC.Fixed);
@@ -103,7 +98,6 @@ public class NodeTest
         nodeC.Update(nodeB, 1);
 
         Assert.Equal("c", nodeC.Name);
-        Assert.Equal(1, nodeC.Cost);
         Assert.Equal(2, nodeC.TotalCost);
         Assert.Equal(nodeB, nodeC.Previous);
         Assert.False(nodeC.Fixed);
@@ -124,7 +118,6 @@ public class NodeTest
         nodeC.Update(nodeB, 3);
 
         Assert.Equal("c", nodeC.Name);
-        Assert.Equal(3, nodeC.Cost);
         Assert.Equal(3, nodeC.TotalCost);
         Assert.Equal(nodeA, nodeC.Previous);
         Assert.False(nodeC.Fixed);
@@ -145,7 +138,6 @@ public class NodeTest
         nodeC.Update(nodeB, 2);
 
         Assert.Equal("c", nodeC.Name);
-        Assert.Equal(3, nodeC.Cost);
         Assert.Equal(3, nodeC.TotalCost);
         Assert.Equal(nodeA, nodeC.Previous);
         Assert.False(nodeC.Fixed);

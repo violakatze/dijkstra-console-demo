@@ -11,11 +11,6 @@ public class Node(string name)
     public string Name { get; } = name;
 
     /// <summary>
-    /// このノードのコスト
-    /// </summary>
-    public int Cost { get; private set; } = int.MaxValue;
-
-    /// <summary>
     /// 直前のノード
     /// </summary>
     public Node? Previous { get; private set; } = default;
@@ -35,7 +30,6 @@ public class Node(string name)
     /// </summary>
     public void SetStartNode()
     {
-        Cost = 0;
         TotalCost = 0;
         Previous = default;
     }
@@ -60,7 +54,6 @@ public class Node(string name)
         if (newTotalCost < TotalCost)
         {
             // コスト更新
-            Cost = edgeCost;
             TotalCost = newTotalCost;
 
             // 直前のノード更新

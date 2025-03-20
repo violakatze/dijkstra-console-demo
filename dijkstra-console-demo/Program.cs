@@ -22,7 +22,7 @@ var edge9 = new Edge(nodeE, nodeG, 21);
 var edge10 = new Edge(nodeF, nodeG, 9);
 var edges = new[] { edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8, edge9, edge10, };
 
-var dijkstra = new Dijkstra(nodes, edges);
+var dijkstra = new Dijkstra(nodes, [nodeA], [nodeG], edges);
 var result = dijkstra.Solve();
 
 Console.WriteLine($"TotalCost: {result.TotalCost}");
