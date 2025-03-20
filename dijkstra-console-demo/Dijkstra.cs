@@ -28,7 +28,9 @@ public class Dijkstra
     /// <summary>
     /// ダイクストラ(オーソドックスなアルゴリズム)
     /// </summary>
-    /// <param name="nodes">ノード(配列の最初がスタート, 最後がゴールになる)</param>
+    /// <param name="nodes">ノード</param>
+    /// <param name="startNodes">開始ノード</param>
+    /// <param name="endNodes">終了ノード</param>
     /// <param name="edges">エッジ</param>
     public Dijkstra(IEnumerable<Node> nodes, IEnumerable<Node> startNodes, IEnumerable<Node> endNodes, IEnumerable<Edge> edges)
     {
